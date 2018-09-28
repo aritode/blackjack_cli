@@ -1,1 +1,1 @@
-# blackjack_cli
+# Blackjack CLI
