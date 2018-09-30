@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Card
   attr_reader :rank, :rank_name, :suit
 

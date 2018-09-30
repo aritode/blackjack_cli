@@ -1,9 +1,12 @@
+# frozen_string_literal: true
+
 class Hand
   def initialize
     @cards = []
   end
 
   def add(card)
+    @cards ||= []
     @cards << card
   end
 
@@ -57,5 +60,21 @@ class Hand
 
   def first_card
     @cards.first
+  end
+
+  def last_card
+    @cards.last
+  end
+
+  def blackjack?
+    total_points == Config::BLACKJACK
+  end
+
+  def busted?
+    total_points > Config::BLACKJACK
+  end
+
+  def size
+    @cards.size
   end
 end

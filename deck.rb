@@ -1,19 +1,9 @@
+# frozen_string_literal: true
+
 class Deck < Hand
-  def populate
-    suits = Suit::MY_ENUM
-    ranks = Rank::MY_ENUM
-
-    suits.each do |suit|
-      ranks.each do |rank|
-        card = Card.new(rank, suit)
-        card.flip_card
-        add(card)
-      end
-    end
-  end
-
-  def shuffle!
-    @cards.shuffle!
+  def initialize
+    populate
+    shuffle!
   end
 
   def deal(hands, cards_per_hand)
@@ -35,5 +25,22 @@ class Deck < Hand
         give(first_card, hand)
       end
     end
+  end
+
+  def populate
+    suits = Suit::MY_ENUM
+    ranks = Rank::MY_ENUM
+
+    suits.each do |suit|
+      ranks.each do |rank|
+        card = Card.new(rank, suit)
+        card.flip_card
+        add(card)
+      end
+    end
+  end
+
+  def shuffle!
+    @cards.shuffle!
   end
 end

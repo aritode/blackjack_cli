@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Rank
   MY_ENUM = [ACE = { value: 1, name: 'Ace' }.freeze,
              DEUCE = { value: 2, name: 'Deuce' }.freeze,
