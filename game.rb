@@ -179,25 +179,19 @@ class Game
   end
 
   def check_result_core
-    check_for_draw
-    check_for_blackjack
-
-    if @player_hand.not_busted? && @dealer_hand.not_busted?
+    if @player_hand.total_points == @dealer_hand.total_points
+      result_draw
+    elsif @dealer_hand.blackjack?
+      result_blackjack(@dealer)
+    elsif @player_hand.blackjack?
+      result_blackjack(@player)
+    elsif @player_hand.not_busted? && @dealer_hand.not_busted?
       check_player_and_dealer
     elsif @player_hand.not_busted? && @dealer_hand.busted?
       result_win(@player)
     else
       result_win(@dealer)
     end
-  end
-
-  def check_for_blackjack
-    result_blackjack(@dealer) if @dealer_hand.blackjack?
-    result_blackjack(@player) if @player_hand.blackjack?
-  end
-
-  def check_for_draw
-    result_draw if @player_hand.total_points == @dealer_hand.total_points
   end
 
   def check_player_and_dealer
