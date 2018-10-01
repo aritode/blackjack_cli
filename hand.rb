@@ -74,6 +74,10 @@ class Hand
     total_points > Config::BLACKJACK
   end
 
+  def not_busted?
+    total_points < Config::BLACKJACK
+  end
+
   def size
     @cards.size
   end

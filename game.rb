@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class Game
-  BLACKJACK = Config::BLACKJACK
-
   def initialize(interface)
     @interface = interface
     @player = create_player
@@ -184,9 +182,9 @@ class Game
     check_for_draw
     check_for_blackjack
 
-    if @player_hand.total_points < BLACKJACK && @dealer_hand.total_points < BLACKJACK
+    if @player_hand.not_busted? && @dealer_hand.not_busted?
       check_player_and_dealer
-    elsif @player_hand.total_points < BLACKJACK && @dealer_hand.busted?
+    elsif @player_hand.not_busted? && @dealer_hand.busted?
       result_win(@player)
     else
       result_win(@dealer)
