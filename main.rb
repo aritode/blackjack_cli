@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_relative 'modules/cards/suit'
-require_relative 'modules/cards/rank'
 require_relative 'modules/validation'
 require_relative 'modules/config'
 require_relative 'menu/interface'

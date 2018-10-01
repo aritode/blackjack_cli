@@ -28,11 +28,8 @@ class Deck < Hand
   end
 
   def populate
-    suits = Suit::MY_ENUM
-    ranks = Rank::MY_ENUM
-
-    suits.each do |suit|
-      ranks.each do |rank|
+    Card::SUITS.each do |suit|
+      Card::RANKS.each do |rank|
         card = Card.new(rank, suit)
         card.flip_card
         add(card)

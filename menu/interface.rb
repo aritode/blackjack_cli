@@ -2,6 +2,7 @@
 
 class Interface
   def show_header_main_menu
+    show_new_line
     puts '================================'
     puts '======== BLACKJACK GAME ========'
     puts '================================'
@@ -40,7 +41,7 @@ class Interface
 
   def show_status(player, player_hand)
     show_header("#{player.name} ($#{player.bank})")
-    puts player_hand.show_hand.to_s
+    puts player_hand
   end
 
   def show_message_take_card(player)

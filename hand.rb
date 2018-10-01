@@ -25,33 +25,23 @@ class Hand
   end
 
   # Show total points if All cards are face up
-  def show_hand
-    string = ''
-    face_up_counter = 0
-
-    @cards.each do |card|
-      string += "#{card}\n"
-      face_up_counter += 1 unless card.face_up?
-    end
-
-    string += "Total points = #{total_points}\n" if face_up_counter.zero?
+  def to_s
+    face_down_counter = @cards.count { |card| !card.face_up? }
+    string = @cards.map(&:to_s).join("\n")
+    string += "\nTotal points = #{total_points}\n" if face_down_counter.zero?
     string
   end
 
   # Getting total points (any Aces by default will be 1)
   def total_points
-    points_counter = 0
-    ace_counter = 0
+    ace_counter = @cards.count { |card| card.rank_value == 1 }
+    points = @cards.map(&:rank_value).sum
 
-    @cards.each do |card|
-      points_counter += card.rank
-      ace_counter += 1 if card.rank_name == Rank::ACE[:name]
-
-      # Add 10 (Ace already have 1 point)
-      points_counter += 10 if ace_counter.positive? && points_counter <= 11
+    ace_counter.times do
+      points += 10 if points + 10 <= 21
     end
 
-    points_counter
+    points
   end
 
   def flip_cards(cards = @cards)

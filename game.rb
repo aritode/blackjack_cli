@@ -267,7 +267,10 @@ class Game
 
   def ask_next_round
     user_input = @interface.ask_yes_no_to_action('start another round?')
-    winner_of_the_game if user_input == 2
+    if user_input == 2
+      @interface.show_header_game_over
+      winner_of_the_game
+    end
 
     init
   end

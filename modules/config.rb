@@ -11,4 +11,9 @@ module Config
   # Money
   INITIAL_BANK = 100
   BET_AMOUNT = 10
+
+  # Card
+  # 1 - for K ♥ , 4 ♣
+  # 2 - for King of Hearts
+  SHORT_NAME_WITH_UNICODE = 1
 end
