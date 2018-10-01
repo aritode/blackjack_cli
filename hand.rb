@@ -54,8 +54,15 @@ class Hand
     points_counter
   end
 
-  def flip_cards
-    @cards.each(&:flip_card)
+  def flip_cards(cards = @cards)
+    cards.each(&:flip_card)
+  end
+
+  def flip_cards_all_up
+    if @cards.reject(&:face_up?).any?
+      cards_face_down = @cards.reject(&:face_up?)
+      flip_cards(cards_face_down)
+    end
   end
 
   def first_card

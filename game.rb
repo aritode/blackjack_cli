@@ -94,17 +94,6 @@ class Game
     @playing
   end
 
-  def dealer_flip_cards_up
-    case Config::DEALER_FLIP_CARDS_COUNT
-    when 1
-      @dealer_hand.last_card.flip_card unless @dealer_hand.last_card.face_up?
-    when 2
-      @dealer_hand.flip_cards
-    else
-      puts 'Error: !!!'
-    end
-  end
-
   ##############################################################
   #
   # Skip Turn (Stand)
@@ -112,15 +101,25 @@ class Game
   ##############################################################
 
   def stand
-    dealer_flip_cards_up if Config::DEALER_FLIP_CARDS_COUNT == 1 && @dealer_hand.size == 2
-    dealer_turn
+    if @player_hand.size == 3 && @dealer_hand.size == 3
+      open_cards
+    else
+      @interface.show_message_stands(@player)
+    end
+
+    if @dealer_hand.size < 3
+      dealer_turn
+    else
+      @interface.show_message_stands(@dealer)
+      player_choose_step
+    end
   end
 
   def dealer_turn
     if @dealer_hand.total_points < Config::DEALER_MAX && @player_hand.size == 3
       @deck.deal(@dealer_hand, 1)
       @interface.show_message_take_card(@dealer)
-      set_result
+      open_cards
     elsif @dealer_hand.total_points < Config::DEALER_MAX && @player_hand.size < 3
       @deck.deal(@dealer_hand, 1)
       @interface.show_message_take_card(@dealer)
@@ -130,7 +129,7 @@ class Game
       player_choose_step
     elsif @dealer_hand.total_points > Config::DEALER_MAX && @player_hand.size == 3
       @interface.show_message_stands(@dealer)
-      player_choose_step
+      open_cards
     end
   end
 
@@ -141,10 +140,11 @@ class Game
   ##############################################################
 
   def hit
-    @deck.deal(@player_hand, 1)
-    @player_hand.last_card.flip_card
-    @interface.show_message_take_card(@player)
-    @interface.show_status(@player, @player_hand)
+    if @player_hand.size < 3
+      @deck.deal(@player_hand, 1)
+      @player_hand.last_card.flip_card
+      @interface.show_message_take_card(@player)
+    end
     dealer_turn
   end
 
@@ -155,7 +155,7 @@ class Game
   ##############################################################
 
   def open_cards
-    dealer_flip_cards_up
+    @dealer_hand.flip_cards_all_up
     set_result
   end
 
