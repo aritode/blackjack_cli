@@ -1,21 +1,19 @@
 # frozen_string_literal: true
 
 class Bank
-  BET = Config::BET_AMOUNT
-
   def initialize
     @bank_total = 0
   end
 
   def bet(player, dealer)
-    player.make_bet(BET)
-    dealer.make_bet(BET)
-    @bank_total += BET * 2
+    player.make_bet(Config::BET_AMOUNT)
+    dealer.make_bet(Config::BET_AMOUNT)
+    @bank_total += Config::BET_AMOUNT * 2
   end
 
   def draw(player, dealer)
-    player.take_money(BET / 2)
-    dealer.take_money(BET / 2)
+    player.take_money(Config::BET_AMOUNT / 2)
+    dealer.take_money(Config::BET_AMOUNT / 2)
     clear
   end
 
