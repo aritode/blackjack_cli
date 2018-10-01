@@ -28,10 +28,12 @@ class Game
       @interface.show_new_line
       @interface.show_info(@bank)
 
+      open_cards if @player_hand.size == 3 && @dealer_hand.size == 3
+
       @interface.show_display_menu
 
       user_choice = gets.to_i
-      abort 'Good bye!' if user_choice.zero?
+      finish_game if user_choice.zero?
 
       check_user_input(user_choice)
     end
@@ -73,17 +75,46 @@ class Game
   end
 
   def give_two_cards_to_players
-    deal_2_cards_to_player
-    deal_2_cards_to_dealer
+    if @deck.size < 6
+      @interface.show_new_line
+      @interface.show_header_game_over
+      @interface.show_error_not_enough_cards
+      winner_of_the_game
+    else
+      deal_2_cards_to_player
+      deal_2_cards_to_dealer
+    end
+  end
+
+  def winner_of_the_game
+    @interface.show_new_line
+    if @dealer.bank == @player.bank
+      @interface.show_winner_of_the_game_draw
+    elsif @player.bank > @dealer.bank
+      @interface.show_winner_of_the_game(@player)
+    elsif @player.bank < @dealer.bank
+      @interface.show_winner_of_the_game(@dealer)
+    end
+    finish_game
+  end
+
+  def finish_game
+    @interface.show_new_line
+    abort 'Good bye! Come back soon!'
   end
 
   ##############################################################
 
   def make_round_bet(player, dealer)
+    @interface.show_new_line
     if player.bank.zero?
+      @interface.show_header_game_over
       @interface.show_message_bank_is_empty(player)
+      winner_of_the_game
     elsif dealer.bank.zero?
+      @interface.show_header_game_over
       @interface.show_message_bank_is_empty(dealer)
+      winner_of_the_game
     end
     @bank.bet(player, dealer)
   end
@@ -104,6 +135,7 @@ class Game
     if @player_hand.size == 3 && @dealer_hand.size == 3
       open_cards
     else
+      @interface.show_new_line
       @interface.show_message_stands(@player)
     end
 
@@ -140,12 +172,23 @@ class Game
   ##############################################################
 
   def hit
+    @interface.show_new_line
+
     if @player_hand.size < 3
       @deck.deal(@player_hand, 1)
       @player_hand.last_card.flip_card
+      @interface.show_new_line
       @interface.show_message_take_card(@player)
+    else
+      player_choose_step
     end
-    dealer_turn
+
+    if @dealer_hand.size < 3
+      dealer_turn
+    else
+      @interface.show_message_stands(@dealer)
+      player_choose_step
+    end
   end
 
   ##############################################################
@@ -224,7 +267,7 @@ class Game
 
   def ask_next_round
     user_input = @interface.ask_yes_no_to_action('start another round?')
-    abort 'Good Bye!' if user_input == 2
+    winner_of_the_game if user_input == 2
 
     init
   end

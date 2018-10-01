@@ -7,6 +7,22 @@ class Interface
     puts '================================'
   end
 
+  def show_header_game_over
+    show_new_line
+    puts '================================'
+    puts '========== GAME OVER ==========='
+    puts '================================'
+    show_new_line
+  end
+
+  def show_header_round_winner
+    show_new_line
+    puts '================================'
+    puts '======== ROUND WINNER =========='
+    puts '================================'
+    show_new_line
+  end
+
   def show_display_menu
     puts
     puts <<~DISPLAY_MENU
@@ -50,17 +66,40 @@ class Interface
   end
 
   def show_message_bank_is_empty(player)
-    puts 'Bank is Empty!'
+    puts "#{player.name} Bank is Empty!"
     show_info_bank(player)
   end
 
-  def show_header_round_winner
-    show_header('ROUND WINNER:')
-    show_result('')
+  def show_winner_of_the_game(player)
+    puts "Winner of the Game: #{player.name}"
+    show_info_bank(player)
   end
 
+  def show_winner_of_the_game_draw
+    puts 'DRAW! There is no Winner of the Game!'
+  end
+
+  # def show_header_round_winner
+  #   show_header('ROUND WINNER:')
+  #   show_result('')
+  # end
+
   def show_info_bank(player)
-    puts "[INFO] Update #{player.name} bank: $#{player.bank}"
+    show_info("#{player.name} Bank: $#{player.bank}")
+  end
+
+  def show_error_not_enough_cards
+    show_error_without_retry('Not enough cards in deck for next round!')
+  end
+
+  #
+  # Show Helpers
+  #
+
+  def show_header(title)
+    puts
+    puts title
+    puts '=' * title.length
   end
 
   def show_info(message)
@@ -74,6 +113,19 @@ class Interface
   def show_new_line
     puts "\n"
   end
+
+  def show_error_message(error)
+    puts "\n[ERROR] #{error}"
+    puts 'Please, try again'
+  end
+
+  def show_error_without_retry(error)
+    puts "\n[ERROR] #{error}"
+  end
+
+  #
+  # Ask/Get/Input Helpers
+  #
 
   def ask_yes_no_to_create(name)
     title = "Do you want to create #{name}?"
@@ -97,17 +149,6 @@ class Interface
   def ask_enter(item_name)
     title = "[NEW] Please enter #{item_name}:"
     characters_user_input(title)
-  end
-
-  def show_error_message(error)
-    puts "\n[ERROR] #{error}"
-    puts 'Please, try again'
-  end
-
-  def show_header(title)
-    puts
-    puts title
-    puts '=' * title.length
   end
 
   def characters_user_input(title)

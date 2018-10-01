@@ -12,8 +12,8 @@ class Bank
   end
 
   def draw(player, dealer)
-    player.take_money(Config::BET_AMOUNT / 2)
-    dealer.take_money(Config::BET_AMOUNT / 2)
+    player.take_money(@bank_total / 2)
+    dealer.take_money(@bank_total / 2)
     clear
   end
 

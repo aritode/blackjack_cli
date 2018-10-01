@@ -15,7 +15,7 @@ class Player
   end
 
   def make_bet(amount)
-    @bank -= amount if @bank > amount
+    @bank -= amount if @bank >= amount
   end
 
   def take_money(amount)
