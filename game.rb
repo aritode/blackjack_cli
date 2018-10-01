@@ -181,8 +181,8 @@ class Game
   end
 
   def check_result_core
-    check_for_blackjack
     check_for_draw
+    check_for_blackjack
 
     if @player_hand.total_points < BLACKJACK && @dealer_hand.total_points < BLACKJACK
       check_player_and_dealer
