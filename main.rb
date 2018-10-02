@@ -2,6 +2,7 @@
 
 require_relative 'modules/validation'
 require_relative 'modules/config'
+require_relative 'modules/cards_helper'
 require_relative 'menu/interface'
 require_relative 'player'
 require_relative 'players/dealer'

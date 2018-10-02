@@ -24,19 +24,21 @@ class Interface
     show_new_line
   end
 
-  def show_display_menu
-    puts
-    puts <<~DISPLAY_MENU
-      1. Skip
-      2. Add Card
-      3. Open Cards
-      0. QUIT
-    DISPLAY_MENU
-    print '=> '
-  end
+  MENU_STEPS = ['Skip', 'Add Card', 'Open Cards', 'QUIT'].freeze
 
   def ask_player_name
     ask_enter('your name')
+  end
+
+  def ask_user_choose_next_step
+    ask_choose('your', 'step', MENU_STEPS)
+  end
+
+  def show_full_status(player, dealer, bank)
+    show_status(player, player.hand)
+    show_status(dealer, dealer.hand)
+    show_new_line
+    show_info(bank)
   end
 
   def show_status(player, player_hand)
@@ -79,11 +81,6 @@ class Interface
   def show_winner_of_the_game_draw
     puts 'DRAW! There is no Winner of the Game!'
   end
-
-  # def show_header_round_winner
-  #   show_header('ROUND WINNER:')
-  #   show_result('')
-  # end
 
   def show_info_bank(player)
     show_info("#{player.name} Bank: $#{player.bank}")
@@ -128,27 +125,20 @@ class Interface
   # Ask/Get/Input Helpers
   #
 
-  def ask_yes_no_to_create(name)
-    title = "Do you want to create #{name}?"
-    custom_list = ["Yes, let's create #{name}",
-                   'No, let\'s go Back']
-    ordered_list_user_input(title, custom_list)
-  end
-
   def ask_yes_no_to_action(action_name)
-    title = "[NEW] Do you want to #{action_name}?"
+    title = "[ASK] Do you want to #{action_name}?"
     custom_list = ["Yes, let's #{action_name}",
                    'No, let\'s go Back']
     ordered_list_user_input(title, custom_list)
   end
 
   def ask_choose(item_name, additional_info, item_obj)
-    title = "[NEW] Please choose #{item_name} #{additional_info}:"
+    title = "[ASK] Please choose #{item_name} #{additional_info}:"
     ordered_list_user_input(title, item_obj)
   end
 
   def ask_enter(item_name)
-    title = "[NEW] Please enter #{item_name}:"
+    title = "[ASK] Please enter #{item_name}:"
     characters_user_input(title)
   end
 

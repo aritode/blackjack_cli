@@ -1,37 +1,26 @@
 # frozen_string_literal: true
 
-class Deck < Hand
+class Deck
+  include CardsHelper
+
   def initialize
     populate
     shuffle!
   end
 
-  def deal(hands, cards_per_hand)
-    deal_single_hand(hands, cards_per_hand) if hands.is_a? Hand
-    deal_multiple_hands(hands, cards_per_hand) if hands.is_a? Array
+  def deal(player)
+    if @cards.size.positive?
+      card = @cards.pop
+      player.take_card(card)
+    end
   end
 
   private
-
-  def deal_single_hand(hand, cards_per_hand)
-    cards_per_hand.times do
-      give(first_card, hand)
-    end
-  end
-
-  def deal_multiple_hands(hands, cards_per_hand)
-    cards_per_hand.times do
-      hands.each do |hand|
-        give(first_card, hand)
-      end
-    end
-  end
 
   def populate
     Card::SUITS.each do |suit|
       Card::RANKS.each do |rank|
         card = Card.new(rank, suit)
-        card.flip_card
         add(card)
       end
     end

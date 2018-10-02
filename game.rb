@@ -7,8 +7,6 @@ class Game
     @dealer = Dealer.new
     @deck = Deck.new
     @bank = Bank.new
-    @player_hand = Hand.new
-    @dealer_hand = Hand.new
   end
 
   def init
@@ -22,18 +20,12 @@ class Game
   def player_choose_step
     loop do
       @interface.show_header_main_menu
+      @interface.show_full_status(@player, @dealer, @bank)
 
-      @interface.show_status(@player, @player_hand)
-      @interface.show_status(@dealer, @dealer_hand)
-      @interface.show_new_line
-      @interface.show_info(@bank)
+      open_cards if @player.hand_size == 3 && @dealer.hand_size == 3
 
-      open_cards if @player_hand.size == 3 && @dealer_hand.size == 3
-
-      @interface.show_display_menu
-
-      user_choice = gets.to_i
-      finish_game if user_choice.zero?
+      user_choice = @interface.ask_user_choose_next_step
+      finish_game if user_choice == 4
 
       check_user_input(user_choice)
     end
@@ -65,13 +57,17 @@ class Game
   ##############################################################
 
   def deal_2_cards_to_player
-    @deck.deal(@player_hand, 2)
-    @player_hand.flip_cards
+    @deck.deal(@player)
+    @deck.deal(@player)
+
+    @player.flip_cards
   end
 
   def deal_2_cards_to_dealer
-    @deck.deal(@dealer_hand, 2)
-    @dealer_hand.first_card.flip_card if Config::DEALER_FLIP_CARDS_COUNT == 1
+    @deck.deal(@dealer)
+    @deck.deal(@dealer)
+
+    @dealer.first_card.flip_card if Config::DEALER_FLIP_CARDS_COUNT == 1
   end
 
   def give_two_cards_to_players
@@ -120,26 +116,20 @@ class Game
   end
 
   ##############################################################
-
-  def playing?
-    @playing
-  end
-
-  ##############################################################
   #
   # Skip Turn (Stand)
   #
   ##############################################################
 
   def stand
-    if @player_hand.size == 3 && @dealer_hand.size == 3
+    if @player.hand_size == 3 && @dealer.hand_size == 3
       open_cards
     else
       @interface.show_new_line
       @interface.show_message_stands(@player)
     end
 
-    if @dealer_hand.size < 3
+    if @dealer.hand_size < 3
       dealer_turn
     else
       @interface.show_message_stands(@dealer)
@@ -148,18 +138,18 @@ class Game
   end
 
   def dealer_turn
-    if @dealer_hand.total_points < Config::DEALER_MAX && @player_hand.size == 3
-      @deck.deal(@dealer_hand, 1)
+    if @dealer.score < Config::DEALER_MAX && @player.hand_size == 3
+      @deck.deal(@dealer)
       @interface.show_message_take_card(@dealer)
       open_cards
-    elsif @dealer_hand.total_points < Config::DEALER_MAX && @player_hand.size < 3
-      @deck.deal(@dealer_hand, 1)
+    elsif @dealer.score < Config::DEALER_MAX && @player.hand_size < 3
+      @deck.deal(@dealer)
       @interface.show_message_take_card(@dealer)
       player_choose_step
-    elsif @dealer_hand.total_points > Config::DEALER_MAX && @player_hand.size < 3
+    elsif @dealer.score > Config::DEALER_MAX && @player.hand_size < 3
       @interface.show_message_stands(@dealer)
       player_choose_step
-    elsif @dealer_hand.total_points > Config::DEALER_MAX && @player_hand.size == 3
+    elsif @dealer.score > Config::DEALER_MAX && @player.hand_size == 3
       @interface.show_message_stands(@dealer)
       open_cards
     end
@@ -174,16 +164,17 @@ class Game
   def hit
     @interface.show_new_line
 
-    if @player_hand.size < 3
-      @deck.deal(@player_hand, 1)
-      @player_hand.last_card.flip_card
+    if @player.hand_size < 3
+      @deck.deal(@player)
+      @player.last_card.flip_card
+
       @interface.show_new_line
       @interface.show_message_take_card(@player)
     else
       player_choose_step
     end
 
-    if @dealer_hand.size < 3
+    if @dealer.hand_size < 3
       dealer_turn
     else
       @interface.show_message_stands(@dealer)
@@ -198,7 +189,7 @@ class Game
   ##############################################################
 
   def open_cards
-    @dealer_hand.flip_cards_all_up
+    @dealer.flip_cards
     set_result
   end
 
@@ -210,27 +201,25 @@ class Game
 
   def set_result
     @interface.show_header_round_winner
-    @interface.show_status(@player, @player_hand)
-    @interface.show_status(@dealer, @dealer_hand)
-    @interface.show_new_line
-    @interface.show_info(@bank)
+    @interface.show_full_status(@player, @dealer, @bank)
 
     check_result_core
 
-    clear_hands(@player_hand, @dealer_hand)
+    @player.clear_hand
+    @dealer.clear_hand
     ask_next_round
   end
 
   def check_result_core
-    if @player_hand.total_points == @dealer_hand.total_points
+    if @player.score == @dealer.score
       result_draw
-    elsif @dealer_hand.blackjack?
+    elsif @dealer.blackjack?
       result_blackjack(@dealer)
-    elsif @player_hand.blackjack?
+    elsif @player.blackjack?
       result_blackjack(@player)
-    elsif @player_hand.not_busted? && @dealer_hand.not_busted?
+    elsif @player.not_busted? && @dealer.not_busted?
       check_player_and_dealer
-    elsif @player_hand.not_busted? && @dealer_hand.busted?
+    elsif @player.not_busted? && @dealer.busted?
       result_win(@player)
     else
       result_win(@dealer)
@@ -238,16 +227,11 @@ class Game
   end
 
   def check_player_and_dealer
-    if @player_hand.total_points > @dealer_hand.total_points
+    if @player.score > @dealer.score
       result_win(@player)
     else
       result_win(@dealer)
     end
-  end
-
-  def clear_hands(player_hand, dealer_hand)
-    player_hand.clear
-    dealer_hand.clear
   end
 
   def result_blackjack(player)

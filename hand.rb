@@ -1,28 +1,7 @@
 # frozen_string_literal: true
 
 class Hand
-  def initialize
-    @cards = []
-  end
-
-  def add(card)
-    @cards ||= []
-    @cards << card
-  end
-
-  def clear
-    @cards.clear
-  end
-
-  def give(card, hand)
-    if @cards.include?(card)
-      @cards.delete(card)
-      hand.add(card)
-      true
-    else
-      false
-    end
-  end
+  include CardsHelper
 
   # Show total points if All cards are face up
   def to_s
@@ -34,8 +13,8 @@ class Hand
 
   # Getting total points (any Aces by default will be 1)
   def total_points
-    ace_counter = @cards.count { |card| card.rank_value == 1 }
-    points = @cards.map(&:rank_value).sum
+    ace_counter = @cards.count { |card| card.rank[:value] == 1 }
+    points = @cards.map { |card| card.rank[:value] }.sum
 
     ace_counter.times do
       points += 10 if points + 10 <= 21
@@ -55,14 +34,6 @@ class Hand
     end
   end
 
-  def first_card
-    @cards.first
-  end
-
-  def last_card
-    @cards.last
-  end
-
   def blackjack?
     total_points == Config::BLACKJACK
   end
@@ -73,9 +44,5 @@ class Hand
 
   def not_busted?
     total_points < Config::BLACKJACK
-  end
-
-  def size
-    @cards.size
   end
 end

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Card
-  attr_reader :rank_value, :rank_name
+  attr_reader :rank
 
   RANKS = [{ value: 1, name: 'Ace', short_name: 'A' }.freeze,
            { value: 2, name: 'Deuce', short_name: '2' }.freeze,
@@ -26,9 +26,7 @@ class Card
     @rank = rank
     @suit = suit
     validate!
-    @rank_value = rank[:value]
-    @rank_name = rank[:name]
-    @face_up = true
+    @face_up = false
   end
 
   def face_up?
@@ -45,8 +43,6 @@ class Card
       face_up? ? "#{@rank[:short_name]} #{@suit[:unicode]}" : '***'
     when 2
       face_up? ? "#{@rank[:name]} of #{@suit[:name]}" : '*** (Face Down) ***'
-    else
-      'Error: Must use Config::SHORT_NAME_WITH_UNICODE'
     end
   end
 
@@ -54,9 +50,9 @@ class Card
 
   def validate!
     message = 'Suit Hash must be only from Card::SUITS'
-    raise message unless Card::SUITS.include? @suit
+    raise message unless SUITS.include? @suit
 
     message = 'Rank Hash must be only from Card::RANKS'
-    raise message unless Card::RANKS.include? @rank
+    raise message unless RANKS.include? @rank
   end
 end
