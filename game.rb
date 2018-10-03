@@ -56,13 +56,18 @@ class Game
 
   ##############################################################
 
+  def deal_card(player)
+    card = @deck.deal
+    player.take_card(card)
+  end
+
   def deal_2_cards_to_player
-    2.times { @deck.deal(@player) }
+    2.times { deal_card(@player) }
     @player.flip_cards
   end
 
   def deal_2_cards_to_dealer
-    2.times { @deck.deal(@dealer) }
+    2.times { deal_card(@dealer) }
     @dealer.first_card.flip_card if Config::DEALER_FLIP_CARDS_COUNT == 1
   end
 
@@ -149,11 +154,11 @@ class Game
 
   def dealer_turn_check_if_deal_on
     if @player.hand_size == Config::CARDS_MAX
-      @deck.deal(@dealer)
+      deal_card(@dealer)
       @interface.show_message_take_card(@dealer)
       open_cards
     elsif @player.hand_size < Config::CARDS_MAX
-      @deck.deal(@dealer)
+      deal_card(@dealer)
       @interface.show_message_take_card(@dealer)
       player_choose_step
     end
@@ -184,7 +189,7 @@ class Game
 
   def hit_check_player_hand_size
     if @player.hand_size < Config::CARDS_MAX
-      @deck.deal(@player)
+      deal_card(@player)
       @player.last_card.flip_card
 
       @interface.show_new_line

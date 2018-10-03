@@ -9,8 +9,8 @@ class Deck
     shuffle!
   end
 
-  def deal(player)
-    player.take_card(@cards.pop) if @cards.size.positive?
+  def deal
+    @cards.pop if @cards.size.positive?
   end
 
   private
