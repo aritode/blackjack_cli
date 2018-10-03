@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class Player
-  include CardsHelper
   include Validation
 
   validate :name, :presence

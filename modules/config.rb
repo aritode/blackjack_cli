@@ -13,7 +13,10 @@ module Config
   BET_AMOUNT = 10
 
   # Card
-  # 1 - for K ♥ , 4 ♣
+  # 1 - for K <> (with unicode)
   # 2 - for King of Hearts
   SHORT_NAME_WITH_UNICODE = 1
+
+  # Max number of Cards in Dealer/Player Hands
+  CARDS_MAX = 3
 end

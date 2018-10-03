@@ -60,7 +60,11 @@ class Interface
   end
 
   def show_result_draw
-    show_result('Draw!')
+    show_result('Draw! Everyone gets his bet back.')
+  end
+
+  def show_everyone_is_busted
+    show_result('Everyone is Busted! Everyone gets his bet back.')
   end
 
   def show_result_winner(player)

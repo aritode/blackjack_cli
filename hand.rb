@@ -15,11 +15,7 @@ class Hand
   def total_points
     ace_counter = @cards.count { |card| card.rank[:value] == 1 }
     points = @cards.map { |card| card.rank[:value] }.sum
-
-    ace_counter.times do
-      points += 10 if points + 10 <= 21
-    end
-
+    ace_counter.times { points += 10 if points + 10 <= 21 }
     points
   end
 
@@ -28,10 +24,7 @@ class Hand
   end
 
   def flip_cards_all_up
-    if @cards.reject(&:face_up?).any?
-      cards_face_down = @cards.reject(&:face_up?)
-      flip_cards(cards_face_down)
-    end
+    flip_cards(@cards.reject(&:face_up?)) if @cards.reject(&:face_up?).any?
   end
 
   def blackjack?

@@ -9,10 +9,7 @@ class Deck
   end
 
   def deal(player)
-    if @cards.size.positive?
-      card = @cards.pop
-      player.take_card(card)
-    end
+    player.take_card(@cards.pop) if @cards.size.positive?
   end
 
   private
