@@ -3,6 +3,26 @@
 class Hand
   include CardsHelper
 
+  def initialize
+    @cards = []
+  end
+
+  def add(card)
+    @cards << card
+  end
+
+  def clear
+    @cards.clear
+  end
+
+  def first_card
+    @cards.first_card
+  end
+
+  def last_card
+    @cards.last
+  end
+
   # Show total points if All cards are face up
   def to_s
     face_down_counter = @cards.count { |card| !card.face_up? }

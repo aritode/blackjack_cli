@@ -43,6 +43,8 @@ class Card
       face_up? ? "#{@rank[:short_name]} #{@suit[:unicode]}" : '***'
     when 2
       face_up? ? "#{@rank[:name]} of #{@suit[:name]}" : '*** (Face Down) ***'
+    else
+      'Error: Must use Config::SHORT_NAME_WITH_UNICODE with 1 or 2 (read config.rb)'
     end
   end
 

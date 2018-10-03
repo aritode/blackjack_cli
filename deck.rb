@@ -4,6 +4,7 @@ class Deck
   include CardsHelper
 
   def initialize
+    @cards = []
     populate
     shuffle!
   end
@@ -18,7 +19,7 @@ class Deck
     Card::SUITS.each do |suit|
       Card::RANKS.each do |rank|
         card = Card.new(rank, suit)
-        add(card)
+        @cards << card
       end
     end
   end
