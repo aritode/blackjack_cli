@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class Deck
-  include CardsHelper
-
   def initialize
     @cards = []
     populate
@@ -11,6 +9,10 @@ class Deck
 
   def deal
     @cards.pop if @cards.size.positive?
+  end
+
+  def size
+    @cards.size
   end
 
   private

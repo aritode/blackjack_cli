@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class Hand
-  include CardsHelper
-
   def initialize
     @cards = []
   end
@@ -21,6 +19,10 @@ class Hand
 
   def last_card
     @cards.last
+  end
+
+  def size
+    @cards.size
   end
 
   # Show total points if All cards are face up
